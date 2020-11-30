@@ -1,21 +1,63 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import * as React from 'react';
+import { StyleSheet, View, Text, Image } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import {
+    createDrawerNavigator,
+    DrawerContentScrollView,
+    DrawerItemList,
+    DrawerItem,
+} from '@react-navigation/drawer';
+import HomeScreen from "./views/Home";
+import ResultScreen from "./views/ResultScreen";
+import img from "./assets/quiz-img.png";
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+function CustomDrawerContent(props) {
+    return (
+        <DrawerContentScrollView {...props}>
+            <View style={styles.container}>
+                <Text style={styles.text}>Quiz App</Text>
+                <Image style={styles.image} source={img}/>
+            </View>
+            <DrawerItemList {...props} />
+            <DrawerItem label="Help" onPress={() => alert('Link to help')} />
+        </DrawerContentScrollView>
+    );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+    container: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 16,
+        borderBottomColor: 'black',
+        borderBottomWidth: 1
+    },
+    text: {
+        textAlign: "center",
+        fontSize: 24
+    },
+    image: {
+        width: 230,
+        height: 110,
+        margin: 12
+    }
 });
+
+const Drawer = createDrawerNavigator();
+
+function MyDrawer() {
+    return (
+        <Drawer.Navigator drawerContent={props => <CustomDrawerContent {...props} />}>
+            <Drawer.Screen name="Home" component={HomeScreen} />
+            <Drawer.Screen name="Result" component={ResultScreen} />
+        </Drawer.Navigator>
+    );
+}
+
+export default function App() {
+    return (
+        <NavigationContainer>
+            <MyDrawer />
+        </NavigationContainer>
+    );
+}
