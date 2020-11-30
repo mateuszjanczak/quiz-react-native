@@ -10,6 +10,7 @@ import {
 import HomeScreen from "./views/HomeScreen";
 import ResultScreen from "./views/ResultScreen";
 import img from "./assets/quiz-img.png";
+import QuizScreen from "./views/QuizScreen";
 
 function CustomDrawerContent(props) {
     return (
@@ -50,6 +51,7 @@ function MyDrawer() {
         <Drawer.Navigator drawerContent={props => <CustomDrawerContent {...props} />}>
             <Drawer.Screen name="Home" component={HomeScreen} options={{ title: "Home"}}/>
             <Drawer.Screen name="Result" component={ResultScreen} options={{ title: "Results"}}/>
+            <Drawer.Screen name="Test1" component={QuizScreen} options={{ title: "Test #1"}}/>
         </Drawer.Navigator>
     );
 }

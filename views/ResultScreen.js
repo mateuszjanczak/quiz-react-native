@@ -2,7 +2,7 @@ import * as React from 'react';
 import {StyleSheet, Text, View} from "react-native";
 import Header from "../components/navigation/Header";
 
-function QuizScreen(props) {
+function ResultScreen(props) {
     let {navigation} = props;
     return (
         <View style={styles.wrapper}>
@@ -25,4 +25,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default QuizScreen;
+export default ResultScreen;
