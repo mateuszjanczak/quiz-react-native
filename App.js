@@ -20,7 +20,9 @@ function CustomDrawerContent(props) {
                 <Image style={styles.image} source={img}/>
             </View>
             <DrawerItemList {...props} />
-            <DrawerItem label="Help" onPress={() => alert('Link to help')} />
+            {false && <View style={styles.anotherList}>
+                <DrawerItem label="Test1" onPress={() => alert('Link to help')} />
+            </View>}
         </DrawerContentScrollView>
     );
 }
@@ -41,6 +43,9 @@ const styles = StyleSheet.create({
         width: 230,
         height: 110,
         margin: 12
+    },
+    anotherList: {
+        marginVertical: 16
     }
 });
 

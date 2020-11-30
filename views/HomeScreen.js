@@ -39,7 +39,7 @@ class HomeScreen extends React.Component {
 
     renderItem = ({title, tags, description}) => {
         return (
-            <View style={styles.item}>
+            <View key={title} style={styles.item}>
                 <Text style={styles.itemTitle}>{title}</Text>
                 <Text style={styles.itemTags}>{tags}</Text>
                 <Text style={styles.itemDescription}>{description}</Text>

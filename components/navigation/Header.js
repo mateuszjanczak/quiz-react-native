@@ -1,4 +1,6 @@
-import {Button, StatusBar, StyleSheet, Text, View} from "react-native";
+import {StatusBar, StyleSheet, Text, View} from "react-native";
+import { Button } from 'react-native-elements';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import * as React from "react";
 
 function Header(props) {
@@ -6,7 +8,12 @@ function Header(props) {
     return (
         <View style={styles.header}>
             <StatusBar style="auto"/>
-            <Button style={styles.headerButton} title={"<=>"} onPress={() => navigation.toggleDrawer()}/>
+
+            <Button style={styles.headerButton} icon={ <Icon
+                name="bars"
+                size={20}
+                color="white"
+            /> }  onPress={() => navigation.toggleDrawer()}/>
             <Text style={styles.headerText}>{title}</Text>
         </View>
     );
