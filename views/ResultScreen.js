@@ -1,14 +1,28 @@
 import * as React from 'react';
-import {Button, View} from "react-native";
+import {StyleSheet, Text, View} from "react-native";
+import Header from "../components/navigation/Header";
 
-function ResultScreen({ navigation }) {
+function QuizScreen(props) {
+    let {navigation} = props;
     return (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-            <Button
-                onPress={() => navigation.navigate('Home')}
-                title="Go to Home"
-            />
+        <View style={styles.wrapper}>
+            <Header navigation={navigation} title={"Results"}/>
+            <View style={styles.container}>
+                <Text>Content...</Text>
+            </View>
         </View>
     );
 }
-export default ResultScreen;
+
+const styles = StyleSheet.create({
+    wrapper: {
+        flex: 1,
+    },
+
+    container: {
+        flex: 0.92,
+        backgroundColor: "silver"
+    }
+});
+
+export default QuizScreen;

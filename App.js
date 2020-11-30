@@ -7,7 +7,7 @@ import {
     DrawerItemList,
     DrawerItem,
 } from '@react-navigation/drawer';
-import HomeScreen from "./views/Home";
+import HomeScreen from "./views/HomeScreen";
 import ResultScreen from "./views/ResultScreen";
 import img from "./assets/quiz-img.png";
 
@@ -48,8 +48,8 @@ const Drawer = createDrawerNavigator();
 function MyDrawer() {
     return (
         <Drawer.Navigator drawerContent={props => <CustomDrawerContent {...props} />}>
-            <Drawer.Screen name="Home" component={HomeScreen} />
-            <Drawer.Screen name="Result" component={ResultScreen} />
+            <Drawer.Screen name="Home" component={HomeScreen} options={{ title: "Home"}}/>
+            <Drawer.Screen name="Result" component={ResultScreen} options={{ title: "Results"}}/>
         </Drawer.Navigator>
     );
 }
