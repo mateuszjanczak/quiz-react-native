@@ -30,12 +30,12 @@ export default class App extends React.Component {
 
     componentDidMount() {
         getData()
-            .then(data => data !== 'MODAL')
+            .then(data => data !== 'MODALXD')
             .then(data => this.setState({ modalVisible: data }));
     }
 
     handleAcceptRules = () => {
-        storeData('MODAL')
+        storeData('MODALXD')
             .then(() => this.setState({ modalVisible: false }));
     }
 
