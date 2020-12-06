@@ -1,53 +1,14 @@
 import * as React from 'react';
-import { StyleSheet, View, Text, Image } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import {
     createDrawerNavigator,
-    DrawerContentScrollView,
-    DrawerItemList,
-    DrawerItem,
 } from '@react-navigation/drawer';
 import HomeScreen from "./views/HomeScreen";
 import ResultScreen from "./views/ResultScreen";
-import img from "./assets/quiz-img.png";
 import QuizScreen from "./views/QuizScreen";
-
-function CustomDrawerContent(props) {
-    return (
-        <DrawerContentScrollView {...props}>
-            <View style={styles.container}>
-                <Text style={styles.text}>Quiz App</Text>
-                <Image style={styles.image} source={img}/>
-            </View>
-            <DrawerItemList {...props} />
-            {false && <View style={styles.anotherList}>
-                <DrawerItem label="Test1" onPress={() => alert('Link to help')} />
-            </View>}
-        </DrawerContentScrollView>
-    );
-}
-
-const styles = StyleSheet.create({
-    container: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 16,
-        borderBottomColor: 'black',
-        borderBottomWidth: 1
-    },
-    text: {
-        textAlign: "center",
-        fontSize: 24
-    },
-    image: {
-        width: 230,
-        height: 110,
-        margin: 12
-    },
-    anotherList: {
-        marginVertical: 16
-    }
-});
+import Modal from "./components/MyModal";
+import {getData, storeData} from "./service/AsyncStorage";
+import CustomDrawerContent from "./components/CustomDrawerContent";
 
 const Drawer = createDrawerNavigator();
 
@@ -61,10 +22,30 @@ function MyDrawer() {
     );
 }
 
-export default function App() {
-    return (
-        <NavigationContainer>
-            <MyDrawer />
-        </NavigationContainer>
-    );
+export default class App extends React.Component {
+
+    state = {
+        modalVisible: false
+    }
+
+    componentDidMount() {
+        getData()
+            .then(data => data !== 'MODALL')
+            .then(data => this.setState({ modalVisible: data }));
+    }
+
+    handleAcceptRules = () => {
+        storeData('MODALL')
+            .then(() => this.setState({ modalVisible: false }));
+    }
+
+    render() {
+        const { modalVisible } = this.state;
+        return (
+            <NavigationContainer>
+                <Modal visible={modalVisible} onPress={this.handleAcceptRules}/>
+                <MyDrawer/>
+            </NavigationContainer>
+        );
+    }
 }
