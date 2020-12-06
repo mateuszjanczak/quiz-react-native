@@ -1,30 +1,70 @@
 import * as React from 'react';
-import {StyleSheet, View} from "react-native";
+import {FlatList, RefreshControl, SafeAreaView, StyleSheet, View} from "react-native";
 import Header from "../components/navigation/Header";
-import {Row, Rows, Table} from "react-native-table-component";
+import {Row, Table} from "react-native-table-component";
+
+const results = [
+    {
+        nick: 'Golem',
+        score: 30,
+        total: 40,
+        type: "historia",
+        date: "2018-11-22"
+    },
+    {
+        nick: 'Golem',
+        score: 30,
+        total: 40,
+        type: "historia",
+        date: "2018-11-22"
+    },
+    {
+        nick: 'Golem',
+        score: 30,
+        total: 40,
+        type: "historia",
+        date: "2018-11-22"
+    }
+];
+
+const wait = (timeout) => {
+    return new Promise(resolve => {
+        setTimeout(resolve, timeout);
+    });
+}
 
 class ResultScreen extends React.Component {
+
     state = {
-        HeadTable: ['User', 'Points', 'Type', 'Date'],
-        DataTable: [
-            ['QWE', '500', 'Test1', '25.11.2020'],
-            ['RTY', '400', 'Test2', '28.11.2020'],
-            ['UIO', '300', 'Test1', '27.11.2020'],
-            ['ASD', '200', 'Test3', '29.11.2020'],
-            ['FGH', '100', 'Test1', '30.11.2020']
-        ]
+        refreshing: false
     }
+
+    renderItem = ({item}) => {
+        const { nick, score, total, type, date } = item;
+        return <Row data={[nick, score + "/" + total, type, date]} textStyle={{margin: 6}} borderStyle={{borderWidth: 1, borderColor: 'gray'}} />
+    }
+
+    handleOnRefresh = () => {
+        this.setState({
+            refreshing: true
+        }, () => {
+            wait(2000).then(() => this.setState({ refreshing: false}));
+        })
+    }
+
 
     render() {
         let {navigation} = this.props;
-        let {HeadTable, DataTable} = this.state;
+        const {refreshing} = this.state;
         return (
             <View style={styles.wrapper}>
                 <Header navigation={navigation} title={"Results"}/>
                 <View style={styles.container}>
-                    <Table style={styles.table} borderStyle={{borderWidth: 1, borderColor: 'gray'}}>
-                        <Row data={HeadTable} style={styles.HeadStyle} textStyle={styles.TableText}/>
-                        <Rows data={DataTable} textStyle={styles.TableText}/>
+                    <Table style={styles.table}>
+                        <Row data={['User', 'Points', 'Type', 'Date']} style={styles.HeadStyle} textStyle={styles.TableText}/>
+                        <SafeAreaView>
+                            <FlatList renderItem={this.renderItem} data={results} keyExtractor={(item, index) => index.toString()} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={this.handleOnRefresh} />}/>
+                        </SafeAreaView>
                     </Table>
                 </View>
             </View>
