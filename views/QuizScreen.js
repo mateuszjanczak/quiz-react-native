@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View, Animated, Button} from "react-native";
+import {StyleSheet, Text, TouchableOpacity, View, Animated, Button, ToastAndroid} from "react-native";
 import Header from "../components/navigation/Header";
 import {CountdownCircleTimer} from "react-native-countdown-circle-timer";
 import {Input} from "react-native-elements";
@@ -214,8 +214,6 @@ class QuizScreen extends React.Component {
             type: tags.join(',')
         }
 
-        console.log(object)
-
         fetch(`http://tgryl.pl/quiz/result`, {
             method: 'POST',
             headers: {
@@ -224,6 +222,7 @@ class QuizScreen extends React.Component {
             },
             body: JSON.stringify(object)
         })
+        ToastAndroid.show("Result submitted!", ToastAndroid.SHORT)
     }
 
     render() {
