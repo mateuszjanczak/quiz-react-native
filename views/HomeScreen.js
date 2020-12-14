@@ -1,50 +1,44 @@
 import * as React from 'react';
-import {StyleSheet, Text, View, ScrollView, SafeAreaView, Button} from "react-native";
+import {StyleSheet, Text, View, ScrollView, SafeAreaView, Button, TouchableOpacity} from "react-native";
 import Header from "../components/navigation/Header";
 
 class HomeScreen extends React.Component {
 
-    quizList = [
-        {
-            title: 'Title test #1',
-            tags: ['#Tag1', "#Tag2"],
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce venenatis condimentum ipsum, eu convallis tellus molestie ac. '
-        },
-        {
-            title: 'Title test #2',
-            tags: ['#Tag1', "#Tag2"],
-            description: 'Donec faucibus quam ut lorem auctor, tempus tincidunt nulla fermentum. Aenean rhoncus nibh quis arcu ultrices, id sodales ante pretium.'
-        },
-        {
-            title: 'Title test #3',
-            tags: ['#Tag1', "#Tag2"],
-            description: 'Duis in sem sapien. Curabitur eu lorem lacinia, venenatis orci vitae, scelerisque dui.'
-        },
-        {
-            title: 'Title test #4',
-            tags: ['#Tag1', "#Tag2"],
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce venenatis condimentum ipsum, eu convallis tellus molestie ac. '
-        },
-        {
-            title: 'Title test #5',
-            tags: ['#Tag1', "#Tag2"],
-            description: 'Donec faucibus quam ut lorem auctor, tempus tincidunt nulla fermentum. Aenean rhoncus nibh quis arcu ultrices, id sodales ante pretium.'
-        },
-        {
-            title: 'Title test #6',
-            tags: ['#Tag1', "#Tag2"],
-            description: 'Duis in sem sapien. Curabitur eu lorem lacinia, venenatis orci vitae, scelerisque dui.'
-        },
-    ]
+    state = {
+        quizList : [
 
-    renderItem = ({title, tags, description}) => {
+        ]
+    }
+
+    componentDidMount() {
+        fetch(`http://tgryl.pl/quiz/tests`)
+            .then(res => res.json())
+            .then(quizList => {
+                this.setState({
+                    ...this.state,
+                    quizList
+                });
+            })
+    }
+
+
+    renderItem = ({id, name, tags, description}) => {
         return (
-            <View key={title} style={styles.item}>
-                <Text style={styles.itemTitle}>{title}</Text>
-                <Text style={styles.itemTags}>{tags}</Text>
-                <Text style={styles.itemDescription}>{description}</Text>
-            </View>
+            <TouchableOpacity key={id} onPress={() => this.handleClick(id)}>
+                <View style={styles.item}>
+                    <Text style={styles.itemTitle}>{name}</Text>
+                    <Text style={styles.itemTags}>{tags.join(", ")}</Text>
+                    <Text style={styles.itemDescription}>{description}</Text>
+                </View>
+            </TouchableOpacity>
         )
+    }
+
+    handleClick = (id) => {
+        let {navigation} = this.props;
+        navigation.navigate('Quiz', {
+            id
+        });
     }
 
     render() {
@@ -55,7 +49,7 @@ class HomeScreen extends React.Component {
                 <SafeAreaView style={styles.container}>
                     <ScrollView>
                         <View>
-                            {this.quizList.map((item) => this.renderItem(item))}
+                            {this.state.quizList.map((item) => this.renderItem(item))}
                         </View>
                         <View style={styles.rank}>
                             <Text style={styles.rankTitle}>Get to know your ranking result</Text>
@@ -85,17 +79,20 @@ const styles = StyleSheet.create({
     },
 
     itemTitle: {
-        fontSize: 16
+        fontSize: 16,
+        fontFamily: "Oswald_700Bold"
     },
 
     itemTags: {
         color: "blue",
         fontSize: 12,
-        paddingVertical: 8
+        paddingVertical: 8,
+        fontFamily: "Roboto_400Regular"
     },
 
     itemDescription: {
-        fontSize: 12
+        fontSize: 14,
+        fontFamily: "Roboto_400Regular"
     },
 
     rank: {
@@ -108,7 +105,8 @@ const styles = StyleSheet.create({
 
     rankTitle: {
         textAlign: "center",
-        margin: 10
+        margin: 10,
+        fontFamily: "Roboto_400Regular"
     }
 });
 

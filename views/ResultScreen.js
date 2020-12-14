@@ -1,46 +1,47 @@
 import * as React from 'react';
-import {FlatList, RefreshControl, SafeAreaView, StyleSheet, View} from "react-native";
+import {FlatList, RefreshControl, StyleSheet, View} from "react-native";
 import Header from "../components/navigation/Header";
 import {Row, Table} from "react-native-table-component";
 
-const results = [
+/*const results = [
     {
         nick: 'Golem',
         score: 30,
         total: 40,
         type: "historia",
-        date: "2018-11-22"
-    },
-    {
-        nick: 'Golem',
-        score: 30,
-        total: 40,
-        type: "historia",
-        date: "2018-11-22"
-    },
-    {
-        nick: 'Golem',
-        score: 30,
-        total: 40,
-        type: "historia",
-        date: "2018-11-22"
+        date: "2018-11-22",
+        id: 1
     }
-];
-
-const wait = (timeout) => {
-    return new Promise(resolve => {
-        setTimeout(resolve, timeout);
-    });
-}
+];*/
 
 class ResultScreen extends React.Component {
 
     state = {
-        refreshing: false
+        refreshing: false,
+        results: []
+    }
+
+    componentDidMount() {
+        this.refreshResults();
+    }
+
+    refreshResults = () => {
+        fetch(`http://tgryl.pl/quiz/results`)
+            .then(res => res.json())
+            .then(results => {
+                this.setState({
+                    ...this.state,
+                    results
+                });
+            })
     }
 
     renderItem = ({item}) => {
-        const { nick, score, total, type, date } = item;
+        const { nick, score, total, type, createdOn} = item;
+        let { date } = item;
+        if(date === undefined) {
+            date = createdOn.slice(0, 10);
+        }
         return <Row data={[nick, score + "/" + total, type, date]} textStyle={{margin: 6}} borderStyle={{borderWidth: 1, borderColor: 'gray'}} />
     }
 
@@ -48,7 +49,8 @@ class ResultScreen extends React.Component {
         this.setState({
             refreshing: true
         }, () => {
-            wait(2000).then(() => this.setState({ refreshing: false}));
+            this.refreshResults();
+            this.setState({ refreshing: false})
         })
     }
 
@@ -62,9 +64,7 @@ class ResultScreen extends React.Component {
                 <View style={styles.container}>
                     <Table style={styles.table}>
                         <Row data={['User', 'Points', 'Type', 'Date']} style={styles.HeadStyle} textStyle={styles.TableText}/>
-                        <SafeAreaView>
-                            <FlatList renderItem={this.renderItem} data={results} keyExtractor={(item, index) => index.toString()} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={this.handleOnRefresh} />}/>
-                        </SafeAreaView>
+                        <FlatList renderItem={this.renderItem} data={this.state.results} keyExtractor={(item, index) => index.toString()} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={this.handleOnRefresh} />}/>
                     </Table>
                 </View>
             </View>
@@ -84,6 +84,7 @@ const styles = StyleSheet.create({
 
     table: {
         margin: 8,
+        flex: 1,
         backgroundColor: "white",
     },
 

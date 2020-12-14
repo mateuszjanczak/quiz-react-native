@@ -1,9 +1,10 @@
 import * as React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View, Animated} from "react-native";
+import {StyleSheet, Text, TouchableOpacity, View, Animated, Button} from "react-native";
 import Header from "../components/navigation/Header";
 import {CountdownCircleTimer} from "react-native-countdown-circle-timer";
+import {Input} from "react-native-elements";
 
-const tasks = [
+/*const tasks = [
     {
         question: "Najmłodsza osoba w ekipie",
         answers: [
@@ -114,21 +115,39 @@ const tasks = [
         ],
         duration: 9
     },
-]
+]*/
 
 class QuizScreen extends React.Component {
 
     state = {
+        testId: '',
+        name: 'Quiz',
+        tasks: {},
+        tags: [],
         task: {},
         taskIndex: -1,
         points: 0,
         duration: 30,
         loaded: false,
-        completed: false
+        completed: false,
+        nick: ''
     }
 
     componentDidMount() {
-        this.loadTask();
+        const { id } = this.props.route.params;
+        console.log(id);
+        fetch(`http://tgryl.pl/quiz/test/${id}`)
+            .then(res => res.json())
+            .then(data => {
+                this.setState({
+                    ...this.state,
+                    tasks: data.tasks,
+                    id: data.id,
+                    name: data.name,
+                    tags: data.tags
+                });
+            })
+            .then(() => this.loadTask())
     }
 
     loadTask = () => {
@@ -136,7 +155,7 @@ class QuizScreen extends React.Component {
 
         taskIndex = taskIndex + 1;
 
-        if(tasks.length === taskIndex) {
+        if(this.state.tasks.length === taskIndex) {
             this.setState({
                 ...this.state,
                 completed: true,
@@ -145,8 +164,8 @@ class QuizScreen extends React.Component {
         } else {
             this.setState({
                 ...this.state,
-                task: tasks[taskIndex],
-                duration: tasks[taskIndex].duration,
+                task: this.state.tasks[taskIndex],
+                duration: this.state.tasks[taskIndex].duration,
                 loaded: true
             })
         }
@@ -178,17 +197,46 @@ class QuizScreen extends React.Component {
         }, () => this.handleNextTask())
     }
 
+    handleChange = (nick) => {
+        this.setState({
+            ...this.state,
+            nick
+        })
+    }
+
+    handleSubmit = () => {
+        const { nick, points, tasks, tags } = this.state;
+
+        const object = {
+            nick: nick,
+            score: points,
+            total: tasks.length,
+            type: tags.join(',')
+        }
+
+        console.log(object)
+
+        fetch(`http://tgryl.pl/quiz/result`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(object)
+        })
+    }
+
     render() {
         let {navigation} = this.props;
         return (
             <View style={styles.wrapper}>
-                <Header navigation={navigation} title={"Jak dobrze znasz ekipę Friza?"}/>
+                <Header navigation={navigation} title={this.state.name}/>
                 <View style={styles.container}>
                     <View style={styles.quiz}>
                         {this.state.loaded && !this.state.completed &&
                             <>
                                 <View style={styles.quizHeader}>
-                                    <Text>Question {this.state.taskIndex+2} of {tasks.length}</Text>
+                                    <Text style={styles.quizHeaderText}>Question {this.state.taskIndex+2} of {this.state.tasks.length}</Text>
                                 </View>
 
                                 <View style={styles.quizTitle}>
@@ -206,38 +254,35 @@ class QuizScreen extends React.Component {
                                 </View>
 
                                 <View style={styles.answers}>
-                                    {this.state.loaded &&
-                                    <>
-                                        <View style={styles.answer}>
-                                            <TouchableOpacity onPress={() => this.markTheAnswer(0)}>
-                                                <Text style={styles.answerText}>{this.state.task.answers[0].content}</Text>
+                                    {this.state.task.answers.map(({content}, index) => {
+                                        return (
+                                            <TouchableOpacity style={styles.answer} onPress={() => this.markTheAnswer(index)}>
+                                                <Text style={styles.answerText}>{content}</Text>
                                             </TouchableOpacity>
-                                        </View>
-                                        <View style={styles.answer}>
-                                            <TouchableOpacity onPress={() => this.markTheAnswer(1)}>
-                                                <Text style={styles.answerText}>{this.state.task.answers[1].content}</Text>
-                                            </TouchableOpacity>
-                                        </View>
-                                        <View style={styles.answer}>
-                                            <TouchableOpacity onPress={() => this.markTheAnswer(2)}>
-                                                <Text style={styles.answerText}>{this.state.task.answers[2].content}</Text>
-                                            </TouchableOpacity>
-                                        </View>
-                                        <View style={styles.answer}>
-                                            <TouchableOpacity onPress={() => this.markTheAnswer(3)}>
-                                                <Text style={styles.answerText}>{this.state.task.answers[3].content}</Text>
-                                            </TouchableOpacity>
-                                        </View>
-                                    </>
-                                    }
+                                        )
+                                    })}
                                 </View>
                             </>
                         }
                         {this.state.completed &&
-                            <View style={styles.quizHeader}>
-                                <Text>Gratulacje!</Text>
-                                <Text>Zdobyłeś {this.state.points} punktów</Text>
+                            <>
+                            <View style={styles.notice}>
+                                <View>
+                                    <Text style={styles.noticeText}>Congratulations!</Text>
+                                    <Text style={styles.noticeTextBottom}>You got {this.state.points} points!</Text>
+                                    <Text>  </Text>
+                                </View>
                             </View>
+                            <View style={styles.notice}>
+                                <Text style={styles.noticeTextBottom}>Would you like to share your result with friends? :)</Text>
+                                <Input value={this.state.nick} onChangeText={(value) => this.handleChange(value)} placeholder={"Your nickname"}/>
+                                <Button title={"Send"} onPress={this.handleSubmit}/>
+                            </View>
+                            <View style={styles.rank}>
+                                <Text style={styles.rankTitle}>Get to know your ranking result</Text>
+                                <Button title={"Check!"} onPress={() => navigation.navigate('Result')} />
+                            </View>
+                            </>
                         }
                     </View>
                 </View>
@@ -270,13 +315,19 @@ const styles = StyleSheet.create({
         margin: 12
     },
 
+    quizHeaderText: {
+      fontFamily: "Oswald_700Bold",
+        fontSize: 20
+    },
+
     quizTitle: {
         margin: 12
     },
 
     quizTitleText: {
         fontSize: 16,
-        fontWeight: "bold"
+        fontWeight: "bold",
+        fontFamily: "Roboto_400Regular"
     },
 
     timer: {
@@ -293,7 +344,7 @@ const styles = StyleSheet.create({
 
     answer: {
         flexBasis: "40%",
-        height: 75,
+        height: 100,
         justifyContent: "center",
         alignItems: "center",
         margin: 12,
@@ -302,7 +353,34 @@ const styles = StyleSheet.create({
     },
 
     answerText: {
+        textAlign: "center"
+    },
 
+    notice: {
+        marginBottom: 25,
+    },
+
+    noticeText: {
+        fontSize: 20,
+        textAlign: "center"
+    },
+
+    noticeTextBottom: {
+        fontSize: 16,
+        textAlign: "center"
+    },
+
+    rank: {
+        marginTop: 8,
+        padding: 16,
+        backgroundColor: "white",
+        justifyContent: "center",
+        alignItems: "center"
+    },
+
+    rankTitle: {
+        textAlign: "center",
+        margin: 10
     }
 });
 

@@ -37,7 +37,8 @@ const styles = StyleSheet.create({
 
     headerText: {
         flex: 1,
-        textAlign: "center"
+        textAlign: "center",
+        fontFamily: "Roboto_400Regular"
     },
 
     container: {

@@ -9,15 +9,28 @@ import QuizScreen from "./views/QuizScreen";
 import Modal from "./components/MyModal";
 import {getData, storeData} from "./service/AsyncStorage";
 import CustomDrawerContent from "./components/CustomDrawerContent";
+import { useFonts, Oswald_700Bold } from '@expo-google-fonts/oswald';
+import { Roboto_300Light, Roboto_400Regular } from '@expo-google-fonts/roboto';
+import {View} from "react-native";
 
 const Drawer = createDrawerNavigator();
 
 function MyDrawer() {
+    let [fontsLoaded] = useFonts({
+        Oswald_700Bold,
+        Roboto_400Regular,
+        Roboto_300Light
+    });
+
+    if (!fontsLoaded) {
+        return <View/>;
+    }
+
     return (
         <Drawer.Navigator drawerContent={props => <CustomDrawerContent {...props} />}>
-            <Drawer.Screen name="Home" component={HomeScreen} options={{ title: "Home"}}/>
-            <Drawer.Screen name="Result" component={ResultScreen} options={{ title: "Results"}}/>
-            <Drawer.Screen name="Test1" component={QuizScreen} options={{ title: "Test #1"}}/>
+            <Drawer.Screen name="Home" component={HomeScreen} options={{ title: "Home", unmountOnBlur: true}} unmountOnBlur={true}/>
+            <Drawer.Screen name="Result" component={ResultScreen} options={{ title: "Results", unmountOnBlur: true}} unmountOnBlur={true}/>
+            <Drawer.Screen name="Quiz" component={QuizScreen} options={{ title: "Quiz", unmountOnBlur: true}} unmountOnBlur={true}/>
         </Drawer.Navigator>
     );
 }
