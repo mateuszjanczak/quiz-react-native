@@ -163,9 +163,19 @@ class QuizScreen extends React.Component {
                 loaded: false
             })
         } else {
-            this.setState({
+            /*this.setState({
                 ...this.state,
                 task: this.state.tasks[taskIndex],
+                duration: this.state.tasks[taskIndex].duration,
+                loaded: true
+            })*/
+            this.setState({
+                ...this.state,
+                task: {
+                    question: this.state.tasks[taskIndex].question,
+                    answers: _.shuffle(this.state.tasks[taskIndex].answers),
+                    duration: this.state.tasks[taskIndex].duration
+                },
                 duration: this.state.tasks[taskIndex].duration,
                 loaded: true
             })
