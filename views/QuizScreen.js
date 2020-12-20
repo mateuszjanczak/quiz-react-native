@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View, Animated, Button, ToastAndroid} from "react-native";
+import _ from 'lodash'
 import Header from "../components/navigation/Header";
 import {CountdownCircleTimer} from "react-native-countdown-circle-timer";
 import {Input} from "react-native-elements";
@@ -141,7 +142,7 @@ class QuizScreen extends React.Component {
             .then(data => {
                 this.setState({
                     ...this.state,
-                    tasks: data.tasks,
+                    tasks: _.shuffle(data.tasks),
                     id: data.id,
                     name: data.name,
                     tags: data.tags
@@ -255,7 +256,7 @@ class QuizScreen extends React.Component {
                                 <View style={styles.answers}>
                                     {this.state.task.answers.map(({content}, index) => {
                                         return (
-                                            <TouchableOpacity style={styles.answer} onPress={() => this.markTheAnswer(index)}>
+                                            <TouchableOpacity key={index} style={styles.answer} onPress={() => this.markTheAnswer(index)}>
                                                 <Text style={styles.answerText}>{content}</Text>
                                             </TouchableOpacity>
                                         )

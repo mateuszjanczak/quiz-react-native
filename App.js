@@ -42,13 +42,17 @@ export default class App extends React.Component {
     }
 
     componentDidMount() {
-        getData()
-            .then(data => data !== 'MODALXD')
+        getData('RULES')
+            .then(data => data !== 'true')
             .then(data => this.setState({ modalVisible: data }));
+
+        fetch(`http://tgryl.pl/quiz/tests`)
+            .then(res => res.json())
+            .then(quizList => storeData("database", JSON.stringify(quizList)));
     }
 
     handleAcceptRules = () => {
-        storeData('MODALXD')
+        storeData('RULES', 'true')
             .then(() => this.setState({ modalVisible: false }));
     }
 

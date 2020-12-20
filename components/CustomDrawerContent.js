@@ -1,7 +1,12 @@
 import {DrawerContentScrollView, DrawerItem, DrawerItemList} from "@react-navigation/drawer";
 import {Image, StyleSheet, Text, View} from "react-native";
+import _ from 'lodash'
+import Icon from 'react-native-vector-icons/FontAwesome';
 import img from "../assets/quiz-img.png";
 import * as React from "react";
+import {Button} from "react-native-elements";
+import {getData, storeData} from "../service/AsyncStorage";
+import NetInfo from "@react-native-community/netinfo";
 
 export default class CustomDrawerContent extends React.Component {
 
@@ -10,21 +15,44 @@ export default class CustomDrawerContent extends React.Component {
     }
 
     componentDidMount() {
+        this.fetchList();
+    }
+
+    fetchList = () => {
         fetch(`http://tgryl.pl/quiz/tests`)
             .then(res => res.json())
+            .then(quizList => storeData("database", JSON.stringify(quizList)));
+
+        getData('database')
+            .then(data => JSON.parse(data))
             .then(quizList => {
                 this.setState({
                     ...this.state,
-                    quizList
+                    quizList: _.shuffle(quizList)
                 });
-            })
+            });
+    }
+
+    randomPick = () => {
+        const { quizList } = this.state;
+        let { navigation } = this.props;
+
+        const id = quizList[Math.floor(Math.random() * quizList.length)].id;
+
+        navigation.navigate('Quiz', {
+            id
+        });
     }
 
     handleClickQuiz = (id) => {
         let {navigation} = this.props;
-        navigation.navigate('Quiz', {
-            id
-        });
+        NetInfo.fetch().then(({isConnected}) => {
+            if(isConnected) {
+                navigation.navigate('Quiz', {
+                    id
+                });
+            }
+        })
     }
 
     render() {
@@ -33,6 +61,22 @@ export default class CustomDrawerContent extends React.Component {
                 <View style={styles.container}>
                     <Text style={styles.text}>Quiz App</Text>
                     <Image style={styles.image} source={img}/>
+                    <View style={styles.buttonsContainer}>
+                        <View style={styles.buttonsContainerButton}>
+                            <Button icon={ <Icon
+                                name="random"
+                                size={20}
+                                color="white"
+                            /> } onPress={this.randomPick} />
+                        </View>
+                        <View style={styles.buttonsContainerButton}>
+                            <Button icon={ <Icon
+                                name="cloud-download"
+                                size={20}
+                                color="white"
+                            /> } onPress={this.fetchList} />
+                        </View>
+                    </View>
                 </View>
                 <DrawerItemList {...this.props} />
                 <View style={styles.anotherList}>
@@ -68,5 +112,16 @@ const styles = StyleSheet.create({
     },
     anotherList: {
         borderTopWidth: 1
+    },
+    buttonsContainerButton: {
+        flex: 1,
+        marginVertical: 6,
+        marginHorizontal: 12
+    },
+    buttonsContainer: {
+        flex: 1,
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center"
     }
 });

@@ -1,6 +1,9 @@
 import * as React from 'react';
 import {StyleSheet, Text, View, ScrollView, SafeAreaView, Button, TouchableOpacity} from "react-native";
+import _ from 'lodash'
 import Header from "../components/navigation/Header";
+import {getData} from "../service/AsyncStorage";
+import NetInfo from "@react-native-community/netinfo";
 
 class HomeScreen extends React.Component {
 
@@ -11,14 +14,23 @@ class HomeScreen extends React.Component {
     }
 
     componentDidMount() {
-        fetch(`http://tgryl.pl/quiz/tests`)
+       /* fetch(`http://tgryl.pl/quiz/tests`)
             .then(res => res.json())
             .then(quizList => {
                 this.setState({
                     ...this.state,
-                    quizList
+                    quizList: _.shuffle(quizList)
                 });
-            })
+            })*/
+
+        getData('database')
+            .then(data => JSON.parse(data))
+            .then(quizList => {
+                this.setState({
+                    ...this.state,
+                    quizList: _.shuffle(quizList)
+                });
+            });
     }
 
 
@@ -36,9 +48,13 @@ class HomeScreen extends React.Component {
 
     handleClick = (id) => {
         let {navigation} = this.props;
-        navigation.navigate('Quiz', {
-            id
-        });
+        NetInfo.fetch().then(({isConnected}) => {
+            if(isConnected) {
+                navigation.navigate('Quiz', {
+                    id
+                });
+            }
+        })
     }
 
     render() {
