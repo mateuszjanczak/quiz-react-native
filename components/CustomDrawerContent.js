@@ -1,4 +1,4 @@
-import {DrawerContentScrollView, DrawerItem, DrawerItemList} from "@react-navigation/drawer";
+import {DrawerContentScrollView, DrawerItem} from "@react-navigation/drawer";
 import {Image, StyleSheet, Text, View} from "react-native";
 import _ from 'lodash'
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -55,6 +55,24 @@ export default class CustomDrawerContent extends React.Component {
         })
     }
 
+    handleHomepage = () => {
+        let {navigation} = this.props;
+        NetInfo.fetch().then(({isConnected}) => {
+            if(isConnected) {
+                navigation.navigate('Home');
+            }
+        })
+    }
+
+    handleResults = () => {
+        let {navigation} = this.props;
+        NetInfo.fetch().then(({isConnected}) => {
+            if(isConnected) {
+                navigation.navigate('Result');
+            }
+        })
+    }
+
     render() {
         return (
             <DrawerContentScrollView {...this.props}>
@@ -78,7 +96,15 @@ export default class CustomDrawerContent extends React.Component {
                         </View>
                     </View>
                 </View>
+{/*
                 <DrawerItemList {...this.props} />
+*/}
+                <View>
+                    <DrawerItem label={"Home"} onPress={() => this.handleHomepage()} options={{ title: "Home", unmountOnBlur: true}} unmountOnBlur={true} />
+                </View>
+                <View>
+                    <DrawerItem label={"Results"} onPress={() => this.handleResults()} options={{ title: "Results", unmountOnBlur: true}} unmountOnBlur={true} />
+                </View>
                 <View style={styles.anotherList}>
                     {this.state.quizList.map(({id, name}, index) =>{
                         return (
