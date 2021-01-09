@@ -48,7 +48,18 @@ export default class App extends React.Component {
 
         fetch(`http://tgryl.pl/quiz/tests`)
             .then(res => res.json())
-            .then(quizList => storeData("database", JSON.stringify(quizList)));
+            .then(quizList => {
+                storeData("database", JSON.stringify(quizList))
+                quizList.map(quiz => {
+                    fetch(`http://tgryl.pl/quiz/test/${quiz.id}`)
+                        .then(res => res.json())
+                        .then(quiz => {
+                            storeData(quiz.id, JSON.stringify(quiz));
+                            console.log(quiz);
+                        })
+                })
+            })
+
     }
 
     handleAcceptRules = () => {

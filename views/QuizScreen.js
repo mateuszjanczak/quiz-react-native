@@ -4,6 +4,7 @@ import _ from 'lodash'
 import Header from "../components/navigation/Header";
 import {CountdownCircleTimer} from "react-native-countdown-circle-timer";
 import {Input} from "react-native-elements";
+import {getData} from "../service/AsyncStorage";
 
 /*const tasks = [
     {
@@ -137,7 +138,7 @@ class QuizScreen extends React.Component {
     componentDidMount() {
         const { id } = this.props.route.params;
         console.log(id);
-        fetch(`http://tgryl.pl/quiz/test/${id}`)
+        /*fetch(`http://tgryl.pl/quiz/test/${id}`)
             .then(res => res.json())
             .then(data => {
                 this.setState({
@@ -148,7 +149,19 @@ class QuizScreen extends React.Component {
                     tags: data.tags
                 });
             })
-            .then(() => this.loadTask())
+            .then(() => this.loadTask())*/
+        getData(id)
+            .then(data => JSON.parse(data))
+            .then(quiz => {
+                this.setState({
+                    ...this.state,
+                    tasks: _.shuffle(quiz.tasks),
+                    id: quiz.id,
+                    name: quiz.name,
+                    tags: quiz.tags
+                });
+            })
+            .then(() => this.loadTask());
     }
 
     loadTask = () => {
