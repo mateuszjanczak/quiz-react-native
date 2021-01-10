@@ -48,13 +48,9 @@ class HomeScreen extends React.Component {
 
     handleClick = (id) => {
         let {navigation} = this.props;
-        NetInfo.fetch().then(({isConnected}) => {
-            if(isConnected) {
-                navigation.navigate('Quiz', {
-                    id
-                });
-            }
-        })
+        navigation.navigate('Quiz', {
+            id
+        });
     }
 
     render() {

@@ -46,31 +46,19 @@ export default class CustomDrawerContent extends React.Component {
 
     handleClickQuiz = (id) => {
         let {navigation} = this.props;
-        NetInfo.fetch().then(({isConnected}) => {
-            if(isConnected) {
-                navigation.navigate('Quiz', {
-                    id
-                });
-            }
-        })
+        navigation.navigate('Quiz', {
+            id
+        });
     }
 
     handleHomepage = () => {
         let {navigation} = this.props;
-        NetInfo.fetch().then(({isConnected}) => {
-            if(isConnected) {
-                navigation.navigate('Home');
-            }
-        })
+        navigation.navigate('Home');
     }
 
     handleResults = () => {
         let {navigation} = this.props;
-        NetInfo.fetch().then(({isConnected}) => {
-            if(isConnected) {
-                navigation.navigate('Result');
-            }
-        })
+        navigation.navigate('Result');
     }
 
     render() {
