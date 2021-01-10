@@ -1,5 +1,5 @@
 import {DrawerContentScrollView, DrawerItem} from "@react-navigation/drawer";
-import {Image, StyleSheet, Text, View} from "react-native";
+import {Image, StyleSheet, Text, ToastAndroid, View} from "react-native";
 import _ from 'lodash'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import img from "../assets/quiz-img.png";
@@ -59,6 +59,12 @@ export default class CustomDrawerContent extends React.Component {
     handleResults = () => {
         let {navigation} = this.props;
         navigation.navigate('Result');
+
+        NetInfo.fetch().then(({isConnected}) => {
+            if(isConnected){
+                navigation.navigate('Result');
+            }
+        })
     }
 
     render() {

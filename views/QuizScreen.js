@@ -238,15 +238,21 @@ class QuizScreen extends React.Component {
             type: tags.join(',')
         }
 
-        fetch(`http://tgryl.pl/quiz/result`, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(object)
+        NetInfo.fetch().then(({isConnected}) => {
+            if(isConnected){
+                fetch(`http://tgryl.pl/quiz/result`, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(object)
+                })
+                ToastAndroid.show("Result submitted!", ToastAndroid.SHORT)
+            } else {
+                ToastAndroid.show("No internet connection!", ToastAndroid.SHORT)
+            }
         })
-        ToastAndroid.show("Result submitted!", ToastAndroid.SHORT)
     }
 
     render() {
