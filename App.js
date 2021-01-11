@@ -46,20 +46,28 @@ export default class App extends React.Component {
             .then(data => data !== 'true')
             .then(data => this.setState({ modalVisible: data }));
 
-        fetch(`http://tgryl.pl/quiz/tests`)
-            .then(res => res.json())
-            .then(quizList => {
-                storeData("database", JSON.stringify(quizList))
-                quizList.map(quiz => {
-                    fetch(`http://tgryl.pl/quiz/test/${quiz.id}`)
-                        .then(res => res.json())
-                        .then(quiz => {
-                            storeData(quiz.id, JSON.stringify(quiz));
-                            console.log(quiz);
-                        })
-                })
-            })
 
+        const d = new Date();
+        console.log(d);
+        getData("updateDate")
+            .then(date => {
+                if(date !== d.getDay() + "-" + d.getMonth() + "-" + d.getFullYear()){
+                    fetch(`http://tgryl.pl/quiz/tests`)
+                        .then(res => res.json())
+                        .then(quizList => {
+                            storeData("database", JSON.stringify(quizList))
+                            quizList.map(quiz => {
+                                fetch(`http://tgryl.pl/quiz/test/${quiz.id}`)
+                                    .then(res => res.json())
+                                    .then(quiz => {
+                                        storeData(quiz.id, JSON.stringify(quiz));
+                                        storeData("updateDate", d.getDay() + "-" + d.getMonth() + "-" + d.getFullYear())
+                                        console.log("pobrano wszytsko")
+                                    })
+                            })
+                        })
+                }
+            })
     }
 
     handleAcceptRules = () => {

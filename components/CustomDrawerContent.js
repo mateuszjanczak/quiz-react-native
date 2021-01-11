@@ -30,7 +30,13 @@ export default class CustomDrawerContent extends React.Component {
             .catch(() => {
                 fetch(`http://tgryl.pl/quiz/tests`)
                     .then(res => res.json())
-                    .then(quizList => storeData("database", JSON.stringify(quizList)));
+                    .then(quizList => {
+                        storeData("database", JSON.stringify(quizList))
+                        this.setState({
+                            ...this.state,
+                            quizList: _.shuffle(quizList)
+                        })
+                    });
             });
     }
 
