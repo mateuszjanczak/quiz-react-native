@@ -19,10 +19,6 @@ export default class CustomDrawerContent extends React.Component {
     }
 
     fetchList = () => {
-        fetch(`http://tgryl.pl/quiz/tests`)
-            .then(res => res.json())
-            .then(quizList => storeData("database", JSON.stringify(quizList)));
-
         getData('database')
             .then(data => JSON.parse(data))
             .then(quizList => {
@@ -30,6 +26,11 @@ export default class CustomDrawerContent extends React.Component {
                     ...this.state,
                     quizList: _.shuffle(quizList)
                 });
+            })
+            .catch(() => {
+                fetch(`http://tgryl.pl/quiz/tests`)
+                    .then(res => res.json())
+                    .then(quizList => storeData("database", JSON.stringify(quizList)));
             });
     }
 
@@ -58,7 +59,6 @@ export default class CustomDrawerContent extends React.Component {
 
     handleResults = () => {
         let {navigation} = this.props;
-        navigation.navigate('Result');
 
         NetInfo.fetch().then(({isConnected}) => {
             if(isConnected){

@@ -5,6 +5,7 @@ import Header from "../components/navigation/Header";
 import {CountdownCircleTimer} from "react-native-countdown-circle-timer";
 import {Input} from "react-native-elements";
 import {getData} from "../service/AsyncStorage";
+import * as NetInfo from "@react-native-community/netinfo";
 
 /*const tasks = [
     {
@@ -255,6 +256,16 @@ class QuizScreen extends React.Component {
         })
     }
 
+    handleResults = () => {
+        let {navigation} = this.props;
+
+        NetInfo.fetch().then(({isConnected}) => {
+            if(isConnected){
+                navigation.navigate('Result');
+            }
+        })
+    }
+
     render() {
         let {navigation} = this.props;
         return (
@@ -309,7 +320,7 @@ class QuizScreen extends React.Component {
                             </View>
                             <View style={styles.rank}>
                                 <Text style={styles.rankTitle}>Get to know your ranking result</Text>
-                                <Button title={"Check!"} onPress={() => navigation.navigate('Result')} />
+                                <Button title={"Check!"} onPress={this.handleResults} />
                             </View>
                             </>
                         }

@@ -30,6 +30,16 @@ class HomeScreen extends React.Component {
                     ...this.state,
                     quizList: _.shuffle(quizList)
                 });
+            })
+            .catch(() => {
+                fetch(`http://tgryl.pl/quiz/tests`)
+                    .then(res => res.json())
+                    .then(quizList => {
+                        this.setState({
+                            ...this.state,
+                            quizList: _.shuffle(quizList)
+                        });
+                    })
             });
     }
 
