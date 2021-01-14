@@ -62,7 +62,7 @@ export default class App extends React.Component {
                                     .then(quiz => {
                                         storeData(quiz.id, JSON.stringify(quiz));
                                         storeData("updateDate", d.getDay() + "-" + d.getMonth() + "-" + d.getFullYear())
-                                        console.log("pobrano wszytsko")
+                                        console.log("pobrano wszystko")
                                     })
                             })
                         })

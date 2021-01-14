@@ -26,7 +26,7 @@ class ResultScreen extends React.Component {
     }
 
     refreshResults = () => {
-        fetch(`http://tgryl.pl/quiz/results`)
+        fetch(`http://tgryl.pl/quiz/results?last=50`)
             .then(res => res.json())
             .then(results => {
                 this.setState({

@@ -33,7 +33,7 @@ class Header extends React.Component {
                     <Text style={styles.headerText}>{title}</Text>
                 </View>
                 {!this.state.isNetwork && <View style={styles.internetError}>
-                    <Text style={styles.internetErrorText}>Brak internetu</Text>
+                    <Text style={styles.internetErrorText}>No internet connection</Text>
                 </View>}
             </>
         );

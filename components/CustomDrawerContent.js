@@ -19,7 +19,36 @@ export default class CustomDrawerContent extends React.Component {
     }
 
     fetchList = () => {
-        getData('database')
+        fetch(`http://tgryl.pl/quiz/tests`)
+            .then(res => res.json())
+            .then(quizList => {
+                storeData("database", JSON.stringify(quizList))
+                this.setState({
+                    ...this.state,
+                    quizList: _.shuffle(quizList)
+                })
+
+                quizList.map(quiz => {
+                    fetch(`http://tgryl.pl/quiz/test/${quiz.id}`)
+                        .then(res => res.json())
+                        .then(quiz => {
+                            storeData(quiz.id, JSON.stringify(quiz));
+                        })
+                })
+            })
+            .catch(() => {
+                getData('database')
+                    .then(data => JSON.parse(data))
+                    .then(quizList => {
+                        this.setState({
+                            ...this.state,
+                            quizList: _.shuffle(quizList)
+                        });
+                    })
+            });
+
+
+        /*getData('database')
             .then(data => JSON.parse(data))
             .then(quizList => {
                 this.setState({
@@ -37,7 +66,7 @@ export default class CustomDrawerContent extends React.Component {
                             quizList: _.shuffle(quizList)
                         })
                     });
-            });
+            });*/
     }
 
     randomPick = () => {

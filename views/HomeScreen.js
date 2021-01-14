@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {StyleSheet, Text, View, ScrollView, SafeAreaView, Button, TouchableOpacity} from "react-native";
+import {StyleSheet, Text, View, ScrollView, SafeAreaView, Button, TouchableOpacity, ToastAndroid} from "react-native";
 import _ from 'lodash'
 import Header from "../components/navigation/Header";
 import {getData} from "../service/AsyncStorage";
@@ -23,6 +23,27 @@ class HomeScreen extends React.Component {
                 });
             })*/
 
+        fetch(`http://tgryl.pl/quiz/tests`)
+            .then(res => res.json())
+            .then(quizList => {
+                this.setState({
+                    ...this.state,
+                    quizList: _.shuffle(quizList)
+                });
+            })
+            .catch(() => {
+                getData('database')
+                    .then(data => JSON.parse(data))
+                    .then(quizList => {
+                        this.setState({
+                            ...this.state,
+                            quizList: _.shuffle(quizList)
+                        });
+                    })
+            })
+
+
+/*
         getData('database')
             .then(data => JSON.parse(data))
             .then(quizList => {
@@ -40,7 +61,7 @@ class HomeScreen extends React.Component {
                             quizList: _.shuffle(quizList)
                         });
                     })
-            });
+            });*/
     }
 
 
