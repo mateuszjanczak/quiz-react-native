@@ -7,119 +7,6 @@ import {Input} from "react-native-elements";
 import {getData} from "../service/AsyncStorage";
 import * as NetInfo from "@react-native-community/netinfo";
 
-/*const tasks = [
-    {
-        question: "Najmłodsza osoba w ekipie",
-        answers: [
-            {
-                content: "Mixer",
-                isCorrect: true
-            },
-            {
-                content: "Friz",
-                isCorrect: false
-            },
-            {
-                content: "Wujek Łuki",
-                isCorrect: false
-            },
-            {
-                content: "Tromba",
-                isCorrect: false
-            },
-        ],
-        duration: 5
-    },
-    {
-        question: "Uwielbia helikoptery",
-        answers: [
-            {
-                content: "Mini Majk",
-                isCorrect: false
-            },
-            {
-                content: "Wujek Łuki",
-                isCorrect: true
-            },
-            {
-                content: "Poczciwy Krzychu",
-                isCorrect: false
-            },
-            {
-                content: "Marta",
-                isCorrect: false
-            },
-        ],
-        duration: 7
-    },
-    {
-        question: "Opłaca dom ekipy",
-        answers: [
-            {
-                content: "Wujek Łuki",
-                isCorrect: false
-            },
-            {
-                content: "Wersow",
-                isCorrect: false
-            },
-            {
-                content: "Friz",
-                isCorrect: true
-            },
-            {
-                content: "Mixer",
-                isCorrect: false
-            },
-        ],
-        duration: 4
-    },
-    {
-        question: "Został zamknięty w swoim pokoju na 24 godziny",
-        answers: [
-            {
-                content: "Mini Majk",
-                isCorrect: false
-            },
-            {
-                content: "Poczciwy Krzychu",
-                isCorrect: false
-            },
-            {
-                content: "Friz",
-                isCorrect: false
-            },
-            {
-                content: "Tromba",
-                isCorrect: true
-            },
-        ],
-        duration: 9
-    },
-    {
-        question: "Boi się węży",
-        answers: [
-            {
-                content: "Mini Majk",
-                isCorrect: true
-            },
-            {
-                content: "Marta",
-                isCorrect: false
-            },
-            {
-                content: "Wersow",
-                isCorrect: false
-            },
-            {
-                content: "Marcysia",
-                isCorrect: false
-            },
-        ],
-        duration: 9
-    },
-]*/
-
 class QuizScreen extends React.Component {
 
     state = {
@@ -138,7 +25,6 @@ class QuizScreen extends React.Component {
 
     componentDidMount() {
         const { id } = this.props.route.params;
-        console.log(id);
         fetch(`http://tgryl.pl/quiz/test/${id}`)
             .then(res => res.json())
             .then(data => {
@@ -180,12 +66,6 @@ class QuizScreen extends React.Component {
                 loaded: false
             })
         } else {
-            /*this.setState({
-                ...this.state,
-                task: this.state.tasks[taskIndex],
-                duration: this.state.tasks[taskIndex].duration,
-                loaded: true
-            })*/
             this.setState({
                 ...this.state,
                 task: {
@@ -233,7 +113,7 @@ class QuizScreen extends React.Component {
     }
 
     handleSubmit = () => {
-        const { nick, points, tasks, tags, name } = this.state;
+        const { nick, points, tasks, name } = this.state;
 
         const object = {
             nick: nick,
@@ -241,8 +121,6 @@ class QuizScreen extends React.Component {
             total: tasks.length,
             type: name
         }
-
-        console.log(this.state);
 
         NetInfo.fetch().then(({isConnected}) => {
             if(isConnected){

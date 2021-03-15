@@ -3,17 +3,6 @@ import {FlatList, RefreshControl, StyleSheet, View} from "react-native";
 import Header from "../components/navigation/Header";
 import {Row, Table} from "react-native-table-component";
 
-/*const results = [
-    {
-        nick: 'Golem',
-        score: 30,
-        total: 40,
-        type: "historia",
-        date: "2018-11-22",
-        id: 1
-    }
-];*/
-
 class ResultScreen extends React.Component {
 
     state = {

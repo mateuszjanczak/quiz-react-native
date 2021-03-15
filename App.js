@@ -48,7 +48,6 @@ export default class App extends React.Component {
 
 
         const d = new Date();
-        console.log(d);
         getData("updateDate")
             .then(date => {
                 if(date !== d.getDay() + "-" + d.getMonth() + "-" + d.getFullYear()){
@@ -62,7 +61,6 @@ export default class App extends React.Component {
                                     .then(quiz => {
                                         storeData(quiz.id, JSON.stringify(quiz));
                                         storeData("updateDate", d.getDay() + "-" + d.getMonth() + "-" + d.getFullYear())
-                                        console.log("pobrano wszystko")
                                     })
                             })
                         })

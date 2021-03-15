@@ -1,9 +1,8 @@
 import * as React from 'react';
-import {StyleSheet, Text, View, ScrollView, SafeAreaView, Button, TouchableOpacity, ToastAndroid} from "react-native";
+import {StyleSheet, Text, View, ScrollView, SafeAreaView, Button, TouchableOpacity} from "react-native";
 import _ from 'lodash'
 import Header from "../components/navigation/Header";
 import {getData} from "../service/AsyncStorage";
-import NetInfo from "@react-native-community/netinfo";
 
 class HomeScreen extends React.Component {
 
@@ -14,15 +13,6 @@ class HomeScreen extends React.Component {
     }
 
     componentDidMount() {
-       /* fetch(`http://tgryl.pl/quiz/tests`)
-            .then(res => res.json())
-            .then(quizList => {
-                this.setState({
-                    ...this.state,
-                    quizList: _.shuffle(quizList)
-                });
-            })*/
-
         fetch(`http://tgryl.pl/quiz/tests`)
             .then(res => res.json())
             .then(quizList => {
@@ -41,27 +31,6 @@ class HomeScreen extends React.Component {
                         });
                     })
             })
-
-
-/*
-        getData('database')
-            .then(data => JSON.parse(data))
-            .then(quizList => {
-                this.setState({
-                    ...this.state,
-                    quizList: _.shuffle(quizList)
-                });
-            })
-            .catch(() => {
-                fetch(`http://tgryl.pl/quiz/tests`)
-                    .then(res => res.json())
-                    .then(quizList => {
-                        this.setState({
-                            ...this.state,
-                            quizList: _.shuffle(quizList)
-                        });
-                    })
-            });*/
     }
 
 
